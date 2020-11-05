@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataSource name="MongoDB - @localhost">
+  <database-model serializer="dbm" dbms="MONGO" family-id="MONGO" format-version="4.19">
+    <root id="1">
+      <ServerVersion>4.4.1</ServerVersion>
+    </root>
+    <schema id="2" parent="1" name="admin"/>
+    <schema id="3" parent="1" name="config"/>
+    <schema id="4" parent="1" name="local"/>
+    <schema id="5" parent="1" name="toshop"/>
+    <table id="6" parent="5" name="products"/>
+    <table id="7" parent="5" name="users"/>
+    <column id="8" parent="6" name="_id">
+      <DataType>ObjectId(0)|12s</DataType>
+    </column>
+    <column id="9" parent="6" name="brand">
+      <DataType>String(0)|12s</DataType>
+    </column>
+    <column id="10" parent="6" name="image">
+      <DataType>String(0)|12s</DataType>
+    </column>
+    <column id="11" parent="6" name="name">
+      <DataType>String(0)|12s</DataType>
+    </column>
+    <column id="12" parent="6" name="numReviews">
+      <DataType>Integer|4s</DataType>
+    </column>
+    <column id="13" parent="6" name="price">
+      <DataType>Double(0)|8s</DataType>
+    </column>
+    <column id="14" parent="6" name="__v">
+      <Position>1</Position>
+      <DataType>Integer|4s</DataType>
+    </column>
+    <column id="15" parent="6" name="category">
+      <Position>1</Position>
+      <DataType>String(0)|12s</DataType>
+    </column>
+    <column id="16" parent="6" name="rating">
+      <Position>1</Position>
+      <DataType>Double(0)|8s</DataType>
+    </column>
+    <column id="17" parent="6" name="countInStock">
+      <Position>2</Position>
+      <DataType>Integer|4s</DataType>
+    </column>
+    <column id="18" parent="6" name="reviews">
+      <Position>2</Position>
+      <DataType>list(0)|4999545s</DataType>
+    </column>
+    <column id="19" parent="6" name="description">
+      <Position>3</Position>
+      <DataType>String(0)|12s</DataType>
+    </column>
+    <column id="20" parent="6" name="user">
+      <Position>3</Position>
+      <DataType>ObjectId(0)|12s</DataType>
+    </column>
+    <column id="21" parent="7" name="_id">
+      <DataType>ObjectId(0)|12s</DataType>
+    </column>
+    <column id="22" parent="7" name="__v">
+      <DataType>Integer|4s</DataType>
+    </column>
+    <column id="23" parent="7" name="email">
+      <DataType>String(0)|12s</DataType>
+    </column>
+    <column id="24" parent="7" name="isAdmin">
+      <DataType>Boolean|12s</DataType>
+    </column>
+    <column id="25" parent="7" name="name">
+      <DataType>String(0)|12s</DataType>
+    </column>
+    <column id="26" parent="7" name="password">
+      <DataType>String(0)|12s</DataType>
+    </column>
+  </database-model>
+</dataSource>
