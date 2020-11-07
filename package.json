@@ -10,7 +10,8 @@
     "client": "yarn --cwd frontend start",
     "dev": "concurrently \"yarn run server\" \"yarn run client\"",
     "data:import": "node backend/seeder.js -c",
-    "data:destroy": "node backend/seeder.js -d"
+    "data:destroy": "node backend/seeder.js -d",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false yarn --cwd frontend install  && yarn --cwd frontend run build "
   },
   "repository": "git@github.com:Jumaniyozov/mernShop.git",
   "author": "Islom <jumaniyozovse@gmail.com>",
