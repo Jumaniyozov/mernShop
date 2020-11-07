@@ -4,13 +4,18 @@ import colors from 'colors';
 import {notFound, errorHandler} from "./middlewares/error.middleware.js";
 
 import productRoutes from './routes/product.route.js';
+import userRoutes from './routes/user.route.js';
+import orderRoutes from './routes/order.route.js';
 import connectDB from "./config/db.js";
 
 dotenv.config();
+connectDB();
 
 
 const app = express();
-connectDB();
+
+app.use(express.json());
+
 
 
 app.get('/', (req, res) => {
@@ -18,6 +23,12 @@ app.get('/', (req, res) => {
 })
 
 app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/orders', orderRoutes);
+
+app.get('/api/config/paypal', (req, res) => {
+    res.send(process.env.PayPal_CLIENT_ID)
+})
 
 // middlewares
 app.use(notFound);
