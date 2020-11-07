@@ -2,20 +2,24 @@ import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {Card, Col, Image, ListGroup, Row} from "react-bootstrap";
+import {Button, Card, Col, Image, ListGroup, Row} from "react-bootstrap";
 import {PayPalButton} from "react-paypal-button-v2";
 
 import Message from "../components/Message.component";
 import Loader from "../components/Loader.component";
-import {getOrderDetails, payOrder} from "../redux/order/order.action";
-import {ORDER_PAY_RESET} from "../redux/order/order.types";
+import {getOrderDetails, payOrder, deliverOrder} from "../redux/order/order.action";
+import {ORDER_PAY_RESET, ORDER_DELIVER_RESET} from "../redux/order/order.types";
 
-const OrderPage = ({match}) => {
+const OrderPage = ({match, history}) => {
     const dispatch = useDispatch();
 
     const [sdkReady, setSdkReady] = useState(false);
 
     const orderId = match.params.id
+
+    const userLogin = useSelector(state => state.userLogin);
+    const {userInfo} = userLogin;
+
 
     const orderDetails = useSelector(state => state.orderDetails);
     const {loading, order, error} = orderDetails;
@@ -23,12 +27,20 @@ const OrderPage = ({match}) => {
     const orderPay = useSelector(state => state.orderPay);
     const {loading: loadingPay, success: successPay} = orderPay;
 
+    const orderDeliver = useSelector(state => state.orderDeliver);
+    const {loading: loadingDeliver, success: successDeliver} = orderDeliver;
+
+
     if (!loading) {
         order.itemsPrice = order.orderItems.reduce((acc, item) => acc + item.price * item.qty, 0);
     }
 
 
     useEffect(() => {
+        if(!userInfo){
+            history.push('/login')
+        }
+
         const addPayPalScript = async () => {
             const {data: clientId} = await axios.get('/api/config/paypal')
             const script = document.createElement('script');
@@ -40,8 +52,9 @@ const OrderPage = ({match}) => {
             }
             document.body.appendChild(script);
         }
-        if (!order || successPay) {
+        if (!order || successPay || successDeliver) {
             dispatch({type: ORDER_PAY_RESET});
+            dispatch({type: ORDER_DELIVER_RESET});
             dispatch(getOrderDetails(orderId))
         } else if(!order.isPaid) {
             if(!window.paypal) {
@@ -50,11 +63,15 @@ const OrderPage = ({match}) => {
                 setSdkReady(true);
             }
         }
-    }, [dispatch, orderId, successPay, order]);
+    }, [history, userInfo,successDeliver,dispatch, orderId, successPay, order]);
 
     const successPaymentHandler = (paymentResult) => {
         console.log(paymentResult)
         dispatch(payOrder(orderId, paymentResult))
+    }
+
+    const deliverHandler = () => {
+        dispatch(deliverOrder(orderId));
     }
 
     return (
@@ -163,6 +180,18 @@ const OrderPage = ({match}) => {
                                             {!sdkReady ? <Loader /> : (
                                                 <PayPalButton amount={order.totalPrice} onSuccess={successPaymentHandler}/>
                                             )}
+                                        </ListGroup.Item>
+                                    )}
+                                    {loadingDeliver && <Loader/>}
+                                    {userInfo && userInfo.isAdmin && order.isPaid && !order.isDelivered && (
+                                        <ListGroup.Item>
+                                            <Button
+                                                type='button'
+                                                className='btn btn-block'
+                                                onClick={deliverHandler}
+                                            >
+                                                Mark As Delivered
+                                            </Button>
                                         </ListGroup.Item>
                                     )}
                                 </ListGroup>
